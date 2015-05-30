@@ -5,18 +5,18 @@ rescue LoadError
 end
 
 Gem::Specification.new do |s|
-	s.name = "certificate-transparency-client"
+	s.name = "certificate-transparency"
 
 	s.version = GVB.version rescue "0.0.0.1.NOGVB"
 	s.date    = GVB.date    rescue Time.now.strftime("%Y-%m-%d")
 
 	s.platform = Gem::Platform::RUBY
 
-	s.summary  = "A client for RFC6962 Certificate Transparency log servers"
+	s.summary  = "Core classes for manipulating RFC6962 Certificate Transparency data structures"
 
 	s.authors  = ["Matt Palmer"]
-	s.email    = ["theshed+certificate-transparency-client@hezmatt.org"]
-	s.homepage = "http://theshed.hezmatt.org/certificate-transparency-client"
+	s.email    = ["theshed+certificate-transparency@hezmatt.org"]
+	s.homepage = "http://theshed.hezmatt.org/certificate-transparency"
 
 	s.files = `git ls-files -z`.split("\0").reject { |f| f =~ /^(G|spec|Rakefile)/ }
 

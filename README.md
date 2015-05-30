@@ -1,9 +1,5 @@
-This is a Ruby client library for interacting with
-[RFC6962](http://tools.ietf.org/html/rfc6962) [Certificate
-Transparency](http://www.certificate-transparency.org/) servers.  It
-aims to provide a complete interface for retrieving and validating tree
-heads, entries, SCTs, as well as submitting certificates and precerts to a
-log.
+This is a collection of Ruby classes which implement all of the fundamental
+data types described in [RFC6962](http://tools.ietf.org/html/rfc6962).
 
 At present, it is not feature complete, however what is released is well
 tested, heavily documented, and should be ready for production use.
@@ -13,15 +9,15 @@ tested, heavily documented, and should be ready for production use.
 
 It's a gem:
 
-    gem install certificate-transparency-client
+    gem install certificate-transparency
 
 There's also the wonders of [the Gemfile](http://bundler.io):
 
-    gem 'certificate-transparency-client'
+    gem 'certificate-transparency'
 
 If you're the sturdy type that likes to run from git:
 
-    rake build; gem install pkg/certificate-transparency-client-<whatever>.gem
+    rake install
 
 Or, if you've eschewed the convenience of Rubygems entirely, then you
 presumably know what to do already.
@@ -29,34 +25,45 @@ presumably know what to do already.
 
 # Usage
 
-To get started, instantiate a new instance of {CT::Client}:
+You'll probably want a good working knowledge of the data types in
+[RFC6962](http://tools.ietf.org/html/rfc6962) to make any sense of this gem.
 
-    require 'certificate-transparency-client'
+All the classes are under the `CT` namespace (or you can use the full
+version, `CertificateTransparency`, if you're feeling like doing a lot of
+typing).  The class names are all the same names as provided in the RFC.
 
-    ct = CT::Client.new "https://ct.example.org"
+In general, a data type will implement some combination of the following
+methods:
 
-The URL provided should be the "base" URL for the log; that is, everything
-immediately preceding the `/ct/v1/<blah>` parts of the URL when making a
-complete request.
+* `.from_json` -- read the data structure from the JSON that would be
+  returned by the relevant request to a CT log server.
 
-If you only provide a URL, you can retrieve things and submit entries, but
-if you provide a public key, {CT::Client} will also validate signatures for
-you:
+* `#to_json` -- spew out a JSON document which represents the data
+  structure.
 
-    ct = CT::Client.new "https://ct.example.org",
-                        :public_key => "<native or base64 key>"
+* `.from_blob` -- parse a binary blob to obtain the fields of the data
+  structure.
 
-To discover what you can do with an instance of {CT::Client}, see the API
-docs for the {CT::Client} class.
+* `#to_blob` -- encode the data structure into a binary blob.
+
+You can also generate an empty data structure by calling `.new` on the
+class.  Read and write accessors for all the field names (matching the names
+given in the RFC) are available.  If you attempt to call a `#to_*` method
+without having filled out all the fields, a `CT::IncompleteDataError` will
+be returned.
+
+If a field is an `enum`, then a symbol is expected to come in and out,
+not the numeric value.  If the field is a `timestamp`, a `Time` instance is
+expected.
 
 
 # Contributing
 
 Bug reports should be sent to the [Github issue
-tracker](https://github.com/mpalmer/certificate-transparency-client/issues),
-or [e-mailed](mailto:theshed+certificate-transparency-client@hezmatt.org). 
+tracker](https://github.com/mpalmer/certificate-transparency/issues),
+or [e-mailed](mailto:theshed+certificate-transparency@hezmatt.org). 
 Patches can be sent as a Github pull request, or
-[e-mailed](mailto:theshed+certificate-transparency-client@hezmatt.org).
+[e-mailed](mailto:theshed+certificate-transparency@hezmatt.org).
 
 
 # Licence
