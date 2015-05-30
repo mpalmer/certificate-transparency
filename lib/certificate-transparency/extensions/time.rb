@@ -5,7 +5,7 @@ class Time
 	# epoch.
 	#
 	def ms
-		(self.to_f * 1000).to_i
+		(self.to_f * 1000).round
 	end
 
 	# Create a new instance of Time, set to the given number of milliseconds
