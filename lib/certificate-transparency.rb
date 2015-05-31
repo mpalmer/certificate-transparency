@@ -28,7 +28,9 @@ unless Kernel.const_defined?(:CT)
 	CT = CertificateTransparency
 end
 
-require 'certificate-transparency/extensions/string'
-require 'certificate-transparency/extensions/time'
+require_relative 'certificate-transparency/extensions/string'
+require_relative 'certificate-transparency/extensions/time'
 
-require 'certificate-transparency/signed_tree_head'
+require_relative 'certificate-transparency/merkle_tree_leaf'
+require_relative 'certificate-transparency/signed_tree_head'
+require_relative 'certificate-transparency/timestamped_entry'

@@ -17,7 +17,7 @@ Spork.prefork do
 end
 
 Spork.each_run do
-	require 'certificate-transparency-client'
+	require 'certificate-transparency'
 
 	require_relative 'example_methods'
 	require_relative 'example_group_methods'
