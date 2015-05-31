@@ -33,10 +33,19 @@ class CertificateTransparency::TimestampedEntry
 	#
 	attr_reader :precert_entry
 
+	# Create a new {CT::TimestampedEntry} by decoding a binary blob.
+	#
+	# @param blob [String]
+	#
+	# @return [CertificateTransparency::TimestampedEntry]
+	#
+	# @raise [ArgumentError] if we can't understand how to decode the
+	#   provided blob.
+	#
 	def self.from_blob(blob)
 		ts, entry_type, rest = blob.unpack("Q>na*")
 
-		self.new do |te|
+		new.tap do |te|
 			te.timestamp = Time.ms(ts)
 
 			case CertificateTransparency::LogEntryType.invert[entry_type]
@@ -78,17 +87,11 @@ class CertificateTransparency::TimestampedEntry
 		end
 	end
 
-	# Create a new TimestampedEntry
-	#
-	# You can't pass any options into this constructor, but if you
-	# pass in a block you'll get the new instance yielded to it, so you can
-	# one-liner it anyway.
-	def initialize
-		yield self if block_given?
-	end
-
 	# Gives you whichever of `#x509_entry` or `#precert_entry` is
 	# not nil, or `nil` if both of them are `nil`.
+	#
+	# @return [OpenSSL::X509::Certificate, CertificateTransparency::PreCert]
+	#
 	def signed_entry
 		@x509_entry or @precert_entry
 	end
@@ -97,6 +100,11 @@ class CertificateTransparency::TimestampedEntry
 	#
 	# Must be a Time object, or something that can be bludgeoned
 	# into a Time object.
+	#
+	# @param ts [Time]
+	#
+	# @return void
+	#
 	def timestamp=(ts)
 		unless ts.is_a? Time or ts.respond_to? :to_time
 			raise ArgumentError,
@@ -107,6 +115,11 @@ class CertificateTransparency::TimestampedEntry
 	end
 
 	# Set the entry to be an x509_entry with the given certificate.
+	#
+	# @param xe [OpenSSL::X509::Certificate]
+	#
+	# @return void
+	#
 	def x509_entry=(xe)
 		@x509_entry = OpenSSL::X509::Certificate.new(xe.to_s)
 		@entry_type = :x509_entry
@@ -115,6 +128,11 @@ class CertificateTransparency::TimestampedEntry
 
 	# Set the entry to be a precert_entry with the given precert data.  You
 	# must pass in a CertificateTransparency::PreCert instance.
+	#
+	# @param pe [CertificateTransparency::PreCert]
+	#
+	# @return void
+	#
 	def precert_entry=(pe)
 		unless pe.is_a? ::CertificateTransparency::PreCert
 			raise ArgumentError,
@@ -126,6 +144,10 @@ class CertificateTransparency::TimestampedEntry
 		@x509_entry = nil
 	end
 
+	# Encode this {TimestampedEntry} into a binary blob.
+	#
+	# @return [String]
+	#
 	def to_blob
 		signed_entry = if @x509_entry
 			TLS::Opaque.new(@x509_entry.to_der, 2**24-1).to_blob
