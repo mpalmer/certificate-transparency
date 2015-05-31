@@ -62,9 +62,9 @@ class TLS::DigitallySigned
 
 	# Set the key for this instance.
 	#
-	# @param k [OpenSSL::PKey::EC] a key to verify or generate the signature. 
+	# @param k [OpenSSL::PKey::EC] a key to verify or generate the signature.
 	#   If you only want to verify an existing signature (ie you created this
-	#   instance via {.from_blob}, then this key can be a public key. 
+	#   instance via {.from_blob}, then this key can be a public key.
 	#   Otherwise, if you want to generate a new signature, you must pass in
 	#   a private key.
 	#
