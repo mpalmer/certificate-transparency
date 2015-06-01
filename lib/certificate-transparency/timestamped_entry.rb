@@ -65,7 +65,7 @@ class CertificateTransparency::TimestampedEntry
 				ikh, tbsc_len_hi, tbsc_len_lo, rest = rest.unpack("a32nCa*")
 				tbsc_len = tbsc_len_hi * 256 + tbsc_len_lo
 				tbsc, rest = rest.unpack("a#{tbsc_len}a*")
-				te.precert_entry = ::CertificateTransparency::PreCert.new do |ctpc|
+				te.precert_entry = ::CertificateTransparency::PreCert.new.tap do |ctpc|
 					ctpc.issuer_key_hash = ikh
 					ctpc.tbs_certificate = tbsc
 				end
