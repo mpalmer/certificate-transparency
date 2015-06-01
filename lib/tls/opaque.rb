@@ -48,6 +48,7 @@ class TLS::Opaque
 	# larger than `maxlen`.
 	#
 	def self.from_blob(blob, maxlen)
+		blob = blob.dup.force_encoding("BINARY")
 		len_bytes = lenlen(maxlen)
 
 		len = blob[0..len_bytes-1].split('').inject(0) do |total, c|
@@ -59,7 +60,7 @@ class TLS::Opaque
 			      "Encoded length (#{len}) is greater than maxlen (#{maxlen})"
 		end
 
-		if len > blob[len_bytes..-1].length
+		if len > blob[len_bytes..-1].bytesize
 			raise ArgumentError,
 			      "Encoded length (#{len}) is greater than the number of bytes available"
 		end
@@ -70,12 +71,14 @@ class TLS::Opaque
 	end
 
 	def initialize(str, maxlen)
+		str = str.dup.force_encoding("BINARY")
+
 		unless maxlen.is_a? Integer
 			raise ArgumentError,
 			      "maxlen must be an Integer"
 		end
 
-		if str.length > maxlen
+		if str.bytesize > maxlen
 			raise ArgumentError,
 			      "value given is longer than maxlen (#{maxlen})"
 		end
