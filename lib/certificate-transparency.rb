@@ -31,6 +31,7 @@ end
 require_relative 'certificate-transparency/extensions/string'
 require_relative 'certificate-transparency/extensions/time'
 
+require_relative 'certificate-transparency/log_entry'
 require_relative 'certificate-transparency/merkle_tree_leaf'
 require_relative 'certificate-transparency/pre_cert'
 require_relative 'certificate-transparency/signed_tree_head'
