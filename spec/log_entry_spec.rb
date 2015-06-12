@@ -30,9 +30,19 @@ describe "CT::LogEntry" do
 		end
 
 		it "produces a chain" do
-			expect(le.extra_data).to be_an(Array)
-			expect(le.extra_data.length).to be > 0
-			le.extra_data.each { |c| expect(c).to be_an(OpenSSL::X509::Certificate) }
+			expect(le.certificate_chain).to be_a(CT::CertificateChain)
+		end
+
+		it "fills the chain" do
+			expect(le.certificate_chain.length).to be > 0
+		end
+
+		it "fills the chain with X509 certificates" do
+			le.certificate_chain.each { |c| expect(c).to be_an(OpenSSL::X509::Certificate) }
+		end
+
+		it "round-trips correctly" do
+			expect(le.to_json).to eq(read_fixture_file("json_log_entry").chomp)
 		end
 	end
 end
