@@ -2,7 +2,7 @@ require_relative 'spec_helper'
 
 describe CT::PreCert do
 	context ".from_blob" do
-		let(:pc) { CT::PreCert.from_blob(fixture_file("pre_cert")) }
+		let(:pc) { CT::PreCert.from_blob(read_fixture_file("pre_cert")) }
 
 		it "creates a PreCert" do
 			expect(pc).to be_a(CT::PreCert)
@@ -19,7 +19,7 @@ describe CT::PreCert do
 		end
 
 		it "round-trips correctly" do
-			expect(pc.to_blob).to eq(fixture_file("pre_cert"))
+			expect(pc.to_blob).to eq(read_fixture_file("pre_cert"))
 		end
 	end
 end

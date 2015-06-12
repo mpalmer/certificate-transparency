@@ -2,7 +2,7 @@ require_relative 'spec_helper'
 
 describe CT::MerkleTreeLeaf do
 	context ".from_blob" do
-		let(:mtl) { CT::MerkleTreeLeaf.from_blob(fixture_file("leaf_input")) }
+		let(:mtl) { CT::MerkleTreeLeaf.from_blob(read_fixture_file("leaf_input")) }
 
 		it "creates a MerkleTreeLeaf" do
 			expect(mtl).to be_a(CT::MerkleTreeLeaf)
@@ -21,7 +21,7 @@ describe CT::MerkleTreeLeaf do
 		end
 
 		it "round-trips correctly" do
-			expect(mtl.to_blob).to eq(fixture_file("leaf_input"))
+			expect(mtl.to_blob).to eq(read_fixture_file("leaf_input"))
 		end
 	end
 end

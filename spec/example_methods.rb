@@ -1,5 +1,9 @@
 module ExampleMethods
 	def fixture_file(f)
-		File.read(File.expand_path("../fixtures/#{f}", __FILE__)).force_encoding("BINARY")
+		File.expand_path("../fixtures/#{f}", __FILE__)
+	end
+
+	def read_fixture_file(f)
+		File.read(fixture_file(f)).force_encoding("BINARY")
 	end
 end

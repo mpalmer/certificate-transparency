@@ -19,11 +19,11 @@ describe "CT::SignedTreeHead" do
 		end
 
 		it "takes a JSON document" do
-			expect { CT::SignedTreeHead.from_json(fixture_file("json_sth")) }.
+			expect { CT::SignedTreeHead.from_json(read_fixture_file("json_sth")) }.
 			  to_not raise_error
 		end
 
-		let(:sth) { CT::SignedTreeHead.from_json(fixture_file("json_sth")) }
+		let(:sth) { CT::SignedTreeHead.from_json(read_fixture_file("json_sth")) }
 
 		it "records the tree size" do
 			expect(sth.tree_size).to eq(4967961)
@@ -34,7 +34,7 @@ describe "CT::SignedTreeHead" do
 		end
 
 		it "validates" do
-			expect(sth.valid?(fixture_file("rocketeer_pk").unbase64)).to be(true)
+			expect(sth.valid?(read_fixture_file("rocketeer_pk").unbase64)).to be(true)
 		end
 	end
 end

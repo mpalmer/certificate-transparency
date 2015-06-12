@@ -2,7 +2,7 @@ require_relative 'spec_helper'
 
 describe CT::TimestampedEntry do
 	context ".from_blob with a x509_entry" do
-		let(:te) { CT::TimestampedEntry.from_blob(fixture_file("timestamped_entry")) }
+		let(:te) { CT::TimestampedEntry.from_blob(read_fixture_file("timestamped_entry")) }
 
 		it "creates a TimestampedEntry" do
 			expect(te).to be_a(CT::TimestampedEntry)
@@ -29,12 +29,12 @@ describe CT::TimestampedEntry do
 		end
 
 		it "round-trips correctly" do
-			expect(te.to_blob).to eq(fixture_file("timestamped_entry"))
+			expect(te.to_blob).to eq(read_fixture_file("timestamped_entry"))
 		end
 	end
 
 	context ".from_blob with a precert_entry" do
-		let(:te) { CT::TimestampedEntry.from_blob(fixture_file("timestamped_entry_precert")) }
+		let(:te) { CT::TimestampedEntry.from_blob(read_fixture_file("timestamped_entry_precert")) }
 
 		it "creates a TimestampedEntry" do
 			expect(te).to be_a(CT::TimestampedEntry)
@@ -61,7 +61,7 @@ describe CT::TimestampedEntry do
 		end
 
 		it "round-trips correctly" do
-			expect(te.to_blob).to eq(fixture_file("timestamped_entry_precert"))
+			expect(te.to_blob).to eq(read_fixture_file("timestamped_entry_precert"))
 		end
 	end
 end

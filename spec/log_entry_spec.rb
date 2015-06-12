@@ -19,11 +19,11 @@ describe "CT::LogEntry" do
 		end
 
 		it "takes a JSON document" do
-			expect { CT::LogEntry.from_json(fixture_file("json_log_entry")) }.
+			expect { CT::LogEntry.from_json(read_fixture_file("json_log_entry")) }.
 			  to_not raise_error
 		end
 
-		let(:le) { CT::LogEntry.from_json(fixture_file("json_log_entry")) }
+		let(:le) { CT::LogEntry.from_json(read_fixture_file("json_log_entry")) }
 
 		it "produces a leaf input" do
 			expect(le.leaf_input).to be_a(CT::MerkleTreeLeaf)
