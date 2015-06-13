@@ -1,3 +1,5 @@
+require 'forwardable'
+
 # A chain of certificates, from an end-entity certificate to a root certificate
 # presumably trusted by the log.
 #
