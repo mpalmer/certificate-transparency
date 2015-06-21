@@ -26,13 +26,21 @@ class CertificateTransparency::SignedTreeHead
 	# Determine whether or not the signature that was provided in the
 	# signed tree head is a valid one, based on the provided key.
 	#
-	# @param pk [String] the raw binary form of the public key of the
-	#   log.
+	# @param pk [String, OpenSSL::PKey::PKey] either the raw binary form of
+	#   the public key of the log, or an existing OpenSSL public key object.
 	#
 	# @return Boolean
 	#
 	def valid?(pk)
-		key = OpenSSL::PKey::EC.new(pk)
+		key = if pk.is_a?(OpenSSL::PKey::PKey)
+			pk
+		else
+			begin
+				OpenSSL::PKey::EC.new(pk)
+			rescue ArgumentError
+				OpenSSL::PKey::RSA.new(pk)
+			end
+		end
 
 		blob = [
 			CT::Version[:v1],

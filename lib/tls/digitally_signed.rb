@@ -14,16 +14,17 @@ class TLS::DigitallySigned
 	#
 	# Takes a number of named options:
 	#
-	# * `:key` -- (required) An instance of `OpenSSL::PKey::EC`.  If you pass
-	#   in `:blob` as well, then this can be either a public key or a private
-	#   key (because you only need a public key for validating a signature),
-	#   but if you only pass in `:content`, you must provide a private key
-	#   here.
+	# * `:key` -- (required) An instance of `OpenSSL::PKey::PKey`.  If you
+	#   pass in `:blob` as well, then this can be either a public key or a
+	#   private key (because you only need a public key for validating a
+	#   signature), but if you only pass in `:content`, you must provide a
+	#   private key here.
 	#
 	#   This key *must* be generated with the NIST P-256 curve (known to
-	#   OpenSSL as `prime256v1`) in order to be compliant with the CT spec.
-	#   However, we can't validate that, so it's up to you to make sure you
-	#   do it right.
+	#   OpenSSL as `prime256v1`), or be an RSA key of at least 2048 bits, in
+	#   order to be compliant with the CT spec.  However, we can't validate
+	#   some of those criteria, so it's up to you to make sure you do it
+	#   right.
 	#
 	# * `:content` -- (required) The content to sign, or verify the signature
 	#   of.  This can be any string.
@@ -37,9 +38,9 @@ class TLS::DigitallySigned
 	def self.from_blob(blob)
 		hash_algorithm, signature_algorithm, sig_blob = blob.unpack("CCa*")
 
-		if signature_algorithm != ::TLS::SignatureAlgorithm[:ecdsa]
+		unless ::TLS::SignatureAlgorithm.values.include?(signature_algorithm)
 			raise ArgumentError,
-			      "Signature specified in blob is not ECDSA"
+			      "invalid signature type specified (#{signature_algorithm})"
 		end
 
 		if hash_algorithm != ::TLS::HashAlgorithm[:sha256]
@@ -62,7 +63,7 @@ class TLS::DigitallySigned
 
 	# Set the key for this instance.
 	#
-	# @param k [OpenSSL::PKey::EC] a key to verify or generate the signature.
+	# @param k [OpenSSL::PKey::PKey] a key to verify or generate the signature.
 	#   If you only want to verify an existing signature (ie you created this
 	#   instance via {.from_blob}, then this key can be a public key.
 	#   Otherwise, if you want to generate a new signature, you must pass in
@@ -74,9 +75,9 @@ class TLS::DigitallySigned
 	#   appropriate type.
 	#
 	def key=(k)
-		unless k.is_a? OpenSSL::PKey::EC
+		unless k.is_a?(OpenSSL::PKey::PKey)
 			raise ArgumentError,
-			      "Key must be an instance of OpenSSL::PKey::EC"
+			      "Key must be an instance of OpenSSL::PKey::PKey (got a #{k.class})"
 		end
 
 		@key = k
